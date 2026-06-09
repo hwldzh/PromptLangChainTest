@@ -41,9 +41,9 @@ OPENAI_API_BASE = "https://api.wlai.vip/v1"
 OPENAI_CHAT_API_KEY = "sk-EhxvNWXkjzZJADfHA1Ac24Dd0f0b42B2B97f3725D3BcA378"
 OPENAI_CHAT_MODEL = "gpt-4o-mini"
 # oneapi相关配置(通义千问为例) 根据自己的实际情况进行调整
-ONEAPI_API_BASE = "http://139.224.72.218:3000/v1"
-ONEAPI_CHAT_API_KEY = "sk-eNbcweTEQV6L5Iw4F0B033219a1149C9Ab77501e690aD218"
-ONEAPI_CHAT_MODEL = "qwen-max"
+ONEAPI_API_BASE = "https://api.minimaxi.com/v1"
+ONEAPI_CHAT_API_KEY = "sk-cp-C7X-cFbQJWyglSTgShzc-KVNUmCR45j2V5G5urOihL94a8b9qiPLVF3VWcvDJWiLM68wg6AEAtXEHrL39bv5QnTNfEHRaQmDrQDEMpGwRwrxG0Vy0_MnAsQ"
+ONEAPI_CHAT_MODEL = "MiniMax-M2.7-highspeed"
 
 # API服务设置相关  根据自己的实际情况进行调整
 PORT = 8012  # 服务访问的端口
