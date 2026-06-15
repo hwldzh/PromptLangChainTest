@@ -149,8 +149,8 @@ async def lifespan(app: FastAPI):
             )
 
         # （2）提取prompt模版
-        prompt_template_system = PromptTemplate.from_file(PROMPT_TEMPLATE_TXT_SYS)
-        prompt_template_user = PromptTemplate.from_file(PROMPT_TEMPLATE_TXT_USER)
+        prompt_template_system = PromptTemplate.from_file(PROMPT_TEMPLATE_TXT_SYS, encoding='utf-8')
+        prompt_template_user = PromptTemplate.from_file(PROMPT_TEMPLATE_TXT_USER, encoding='utf-8')
         prompt = ChatPromptTemplate.from_messages(
             [
                 ("system",prompt_template_system.template),
