@@ -18,8 +18,8 @@ from fastapi.responses import JSONResponse, StreamingResponse
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-PROMPT_TEMPLATE_TXT_SYS = "prompt_template_system.txt"
-PROMPT_TEMPLATE_TXT_USER = "prompt_template_user.txt"
+PROMPT_TEMPLATE_TXT_SYS = "../prompt_template_system.txt"
+PROMPT_TEMPLATE_TXT_USER = "../prompt_template_user.txt"
 
 PORT = 8082
 API_BASE_URL = "https://api.minimaxi.com/v1"
@@ -28,8 +28,6 @@ CHAT_MODEL = "MiniMax-M2.7-highspeed"
 
 # 声明全局变量，全局调用
 model = None
-
-app = FastAPI(lifespan=lifespan)
 
 def getPrompt(prompt):
     logger.info(f"最后给到LLM的prompt内容为：{prompt}")
@@ -63,12 +61,14 @@ async def lifespan(app: FastAPI):
     yield
     logger.info("正在关闭应用...")
 
+app = FastAPI(lifespan=lifespan)
+
 class Message(BaseModel):
     role: str
     content: str
 
 
-class ChatCompleteRequest(BaseModel):
+class ChatCompletionRequest(BaseModel):
     messages: List[Message]
     stream: Optional[bool] = False
 
@@ -113,14 +113,15 @@ def format_response(response):
     # 将所有格式化后的段落用两个换行符连接起来，以形成一个具有清晰段落分隔的文本
     return '\n\n'.join(formatted_paragraphs)
 
-
-async def chat_compltetions(request: ChatCompleteRequest):
+# POST请求接口，与大模型进行知识问答
+@app.post("/v1/chat/completions")
+async def chat_compltetions(request: ChatCompletionRequest):
     if not model or not prompt or not chain:
         logger.error("服务未初始化")
         raise HTTPException(status_code=500, detail="服务未初始化")
     try:
         logger.info(f"收到聊天完成请求: {request}")
-        query_prompt = request.message[-1].content
+        query_prompt = request.messages[-1].content
         logger.info(f"用户问题是: {query_prompt}")
 
         result = chain.invoke(
@@ -174,7 +175,7 @@ async def chat_compltetions(request: ChatCompleteRequest):
                 ]
             )
             logger.info(f"返回给用户的响应是: {response}")
-            return JSONResponse(content=response.model_dump)
+            return JSONResponse(content=response.model_dump())
     except Exception as e:
         logger.error(f"处理请求时出错: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
